@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+</head>
+<body>
+	<header th:replace="~{layout/layout :: top-cliente}"></header>
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+			<div class="alert alert-info" th:if="${mensaje}">
+				<p>[[${mensaje}]]<button type="button" class="close" data-dismiss="alert"><span>&times;</span></button></p>
+			</div>
+				<div class="card">
+					<div class="card-header">
+						<h3 class="text-center text-dark card-title" th:text="${titulo}"></h3>
+					</div>
+					<div class="card-body">
+						<form method="get" id="formBuscar">
+							<div class="form-inline">
+								<input type="text" name="text" class="form-control"/>
+								<button type="button" id="buscarBtn" class="btn btn-danger">Buscar</button>
+							</div>
+						</form>
+						<table
+							class="table table-responsive-md table-hover table-stripped">
+							<thead>
+								<tr>
+									<th>Fecha de venta</th>
+									<th>Forma de pago</th>
+									<th>Total</th>
+									<th>Ver</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="venta : ${ventas}">
+									<td th:text="*{venta.ventaId.fechaVenta}"></td>
+									<td th:text="*{venta.ventaId.ventaPago}"></td>
+									<td th:text="*{venta.ventaId.ventaTotal}"></td>
+									<td><a th:href="@{/cliente/productosForVenta/} + *{venta.ventaId.ventaId}" class="btn btn-primary">Ver</a></td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th>Fecha de venta</th>
+									<th>Forma de pago</th>
+									<th>Total</th>
+									<th>Ver</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

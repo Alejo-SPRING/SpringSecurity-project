@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+</head>
+<body>
+	<header th:replace="~{layout/layout :: top-cliente}"></header>
+	<main>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-12 col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="text-center">Crear producto</h3>
+						</div>
+						<div class="card-body">
+						<div th:object="${producto}" th:remove="tag">
+							<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+								<li th:each="err:${#fields.errors('*')}" th:text="${err}"></li>
+							</ul>
+						</div>
+							<form th:action="@{/cliente/crearProducto}" th:object="${producto}" method="post" enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-12">
+										<label for="nombre">Nombre</label> 
+										<input type="text" class="form-control" th:field="*{productoNombre}" id="nombre" th:errorClass="'alert-danger'" /> 
+										<small class="text-danger" th:if="${#fields.hasErrors('productoNombre')}" th:errors="*{productoNombre}"></small>
+									</div>
+									<div class="col-12">
+										<label for="valor">Valor</label> 
+										<input type="number" th:field="*{productoValor}" id="valor" class="form-control" th:errorClass="'alert-danger'" /> 
+										<small class="text-danger" th:if="${#fields.hasErrors('productoValor')}" th:errors="*{productoValor}"></small>
+									</div>
+									<div class="col-12">
+										<div class="custom-file mt-3">
+											<label for="img" class="custom-file-label">Imagen</label> <input
+												type="file" name=file id="img" class="custom-file-input" />
+										</div>
+										<button type="submit" class="btn btn-primary btn-block mt-3">Crear</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

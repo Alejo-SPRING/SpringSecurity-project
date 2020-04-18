@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/layout :: head}">
+</head>
+<body>
+	<header th:replace="~{layout/layout :: top-cliente}"></header>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-6">
+				<div class="card card-body bg-danger">
+					<h1 class="text-center text-light">Error 403</h1>
+					<hr class="bg-light" />
+					<p class="text-light h2" sec:authentication="name"></p> 
+					<p class="text-light h2">No tienes acceso a esta función del
+						sistema!</p>
+					<a th:href="@{/cliente/verFac}" class="btn btn-outline-light"
+						role="button">Regresar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

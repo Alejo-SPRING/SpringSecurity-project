@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+	<header th:replace="~{layout/layout :: top-cliente}"></header>
+	<main>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="text-center">Productos</h3>
+							<a href="#productos" data-toggle="modal">
+							<div class="badge badge-danger">
+									<p>$ [[${totalListProduct}]]</p>
+								</div>
+							</a>
+								<h4 th:text="'$' + ${{totalProduct}}"></h4>
+							<div class="modal fade" id="productos">
+								<div class="modal-dialog modal-lg">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h3 class="modal-title">Productos seleccionados</h3>
+										</div>
+										<div class="modal-body">
+											<table
+												class="table table-stripped table-hover table-responsive-md">
+												<thead>
+													<tr>
+														<th>Imagen</th>
+														<th>Nombre</th>
+														<th>Valor</th>
+														<th>Eliminar</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="obj:${listProductos}">
+														<td><img th:src="@{/imgs/} + *{obj.productoImg}" class="img-fluid" height="100" width="100" th:alt="*{obj.productoImg}"></img></td>
+														<td th:text="*{obj.productoNombre}"></td>
+														<td th:text="*{{obj.productoValor}}"></td>
+														<td><button type="button" class="btn btn-danger" th:onclick="eliminarProducto([[*{obj.productoId}]])">Eliminar</button></td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<th>Imagen</th>
+														<th>Nombre</th>
+														<th>Valor</th>
+														<th>Eliminar</th>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<table
+								class="table table-responsive-md table-hover table-stripped">
+								<thead>
+									<tr>
+										<th>Img</th>
+										<th>Nombre</th>
+										<th>Valor</th>
+										<th>Agregar</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="obj:${productos}">
+										<td><img th:src="@{/imgs/} + *{obj.productoImg}"
+											height="100" width="100" class="img-fluid"
+											th:alt="*{obj.productoImg}"></img></td>
+										<td th:text="${obj.productoNombre}"></td>
+										<td th:text="${{obj.productoValor}}"></td>
+										<td><button type="button" class="btn btn-primary"
+												th:onclick="confirm([[*{obj.productoId}]]);">Seleccionar</button></td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th>Img</th>
+										<th>Nombre</th>
+										<th>Valor</th>
+										<th>Agregar</th>
+									</tr>
+								</tfoot>
+							</table>
+							<a th:href="@{/cliente/regVenta}" class="btn btn-primary">Crear
+								factura</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

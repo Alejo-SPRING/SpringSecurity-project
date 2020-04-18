@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+<title th:text="'AppSpringFramework ' + ${titulo}"></title>
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<header th:fragment="top-cliente">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<a th:href="@{/SpringApp/filter}">
+				<h3 class="navbar-brand">
+					<img th:src="@{/img/descarga (1).png}" alt="imagen logo"
+						height="60" width="60" class="rounded-circle" />AppSpringFramework
+				</h3>
+			</a>
+			<button type="button" class="navbar-toggler" data-toggle="collapse"
+				data-target="#menu">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="menu">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a th:href="@{/cliente/verFac}"
+						class="nav-link">Ver facturas</a></li>
+					<li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/cliente/productos}"
+						class="nav-link">Registrar facturas</a></li>
+					<li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/cliente/crearProducto}"
+						class="nav-link">Producto</a></li>
+				</ul>
+				<ul class="navbar-nav navbar-right">
+					<li class="nav-item"><a class="nav-link">
+							<div sec:authorize="isAuthenticated()">
+								<small sec:authentication="name"></small> <small
+									sec:authentication="principal.authorities"></small>
+							</div>
+					</a></li>
+					<li class="nav-item"><form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-outline-primary">Salir</button>
+						</form></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<header th:fragment="top">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<a th:href="@{/}">
+				<h3 class="navbar-brand">
+					<img th:src="@{/img/descarga (1).png}" alt="imagen logo"
+						height="60" width="60" class="rounded-circle" />AppSpringFramework
+				</h3>
+			</a>
+			<button type="button" class="navbar-toggler" data-toggle="collapse"
+				data-target="#menu">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="menu">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a th:href="@{/springLogin2}"
+						class="nav-link">Inicio</a></li>
+					<li class="nav-item"><a th:href="@{/registrar}"
+						class="nav-link">Registrar</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<footer th:fragment="footer">
+		<div class="container-fluid bg-dark">
+			<div class="row">
+				<div class="col-3">
+					<img th:src="@{/img/descarga (1).png}" class="rounded-circle mt-3"
+						width="90" height="90" />
+				</div>
+				<div class="col-8">
+					<p class="text-center text-light">AppSpringFramework
+						desarollada por: Anderson Rojas</p>
+					<p class="text-center text-light">&copyRight; Not copy right</p>
+					<p class="text-center text-light">Aplicaión desarrollada para
+						la parctica y auto evaluación de lo aprendido con SpringMVC,
+						SpringBoot, Thymeleaf</p>
+				</div>
+			</div>
+		</div>
+		<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/MisScripts.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/mensajes.js}"></script>
+		<script th:if="${mensaje}" th:utext="${mensaje}"></script>
+	</footer>
+</body>
+</html>
