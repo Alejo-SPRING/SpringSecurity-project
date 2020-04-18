@@ -39,9 +39,4 @@ public class UsuarioLoginServiceImpl implements IUsuarioLoginService {
 		return usuarioLoginDAO.findById(id).orElse(null);
 	}
 
-	@Override
-	public UsuarioLogin login(UsuarioLogin usuarioLogin) {
-		return usuarioLoginDAO.login(usuarioLogin.getUsuarioCorreo(), usuarioLogin.getUsuarioPass());
-	}
-
 }

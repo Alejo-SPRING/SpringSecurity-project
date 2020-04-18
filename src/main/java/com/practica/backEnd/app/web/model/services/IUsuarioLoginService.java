@@ -11,6 +11,5 @@ public interface IUsuarioLoginService {
 	public void remove(UsuarioLogin usuarioLogin);
 	public void update(UsuarioLogin usuarioLogin);
 	public UsuarioLogin findForId(Integer id);
-	public UsuarioLogin login(UsuarioLogin usuarioLogin);
 	
 }

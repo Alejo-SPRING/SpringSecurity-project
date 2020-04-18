@@ -3,15 +3,19 @@ package com.practica.backEnd.app.web.controller;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,6 +63,7 @@ public class ClienteController {
 	private IUploadFilesService uploadFilesDAO;
 	private static final Logger logger = LoggerFactory.getLogger(ClienteController.class);
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/buscar")
 	public @ResponseBody List<UsuarioDato> buscar(@RequestParam String text) {
 		System.out.println(text);
@@ -66,23 +71,30 @@ public class ClienteController {
 	}
 	
 	public boolean hasRole(String rol) {
+		//inicializamos el contexto de Spring Security
 		SecurityContext context = SecurityContextHolder.getContext();
+		//validamos si el contexto se inicio (osea traemos el logeo de la persona)
 		if (context == null) {
 			return false;
 		}
+		//inicializamos la Authentication con el context donde traemos los datos de la persona logeada
 		Authentication auth = context.getAuthentication();
 		if(auth == null) {
 			return false;
 		}
 		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		for (GrantedAuthority grantedAuthority : authorities) {
+		/*for (GrantedAuthority grantedAuthority : authorities) {
 			if(rol.equals(grantedAuthority.getAuthority())) {
+				logger.info(auth.getName() + " tu rol es: " + grantedAuthority.getAuthority());
 				return true;
 			}
 		}
-		return false;
+		return false;*/
+		//otra manera simplificada de buscar el rol del usuario logeado 
+		return authorities.contains(new SimpleGrantedAuthority(rol));
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/crearProducto")
 	public String crearProducto(@Valid Producto producto, BindingResult result, @RequestParam(name = "file") MultipartFile file, RedirectAttributes redirect, Model model) {
 		if (result.hasErrors()) {
@@ -99,6 +111,7 @@ public class ClienteController {
 		return "redirect:/cliente/crearProducto";
 	}
 	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/crearProducto")
 	public String crearProducto(Model model) {
 		model.addAttribute("titulo", "Crear producto");
@@ -106,6 +119,7 @@ public class ClienteController {
 		return "cliente/productoForm";
 	}
 	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/productosForVenta/{id}")
 	public String productosForVenta(@PathVariable Integer id, Model model) {
 		if (id > 0 && id != null) {
@@ -115,6 +129,7 @@ public class ClienteController {
 		return "cliente/productosForVenta";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/eliminarProd/{id}")
 	public String eliminarProducto(@PathVariable Integer id, RedirectAttributes redirect) {
 		if (id > 0 && id != null) {
@@ -129,6 +144,7 @@ public class ClienteController {
 		return "redirect:/cliente/productos";
 	}
 
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/productos")
 	public String productos(Model model) {
 		model.addAttribute("listProductos", productoServiceDAO.getProductosSelected());
@@ -139,6 +155,7 @@ public class ClienteController {
 		return "cliente/productos";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/agregarPro/{id}")
 	public String agregarProduct(@PathVariable Integer id, RedirectAttributes redirect) {
 		if (id > 0 && id != null) {
@@ -150,6 +167,7 @@ public class ClienteController {
 		return "redirect:/cliente/productos";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/regVenta")
 	public String crearVenta(@Valid Venta venta, Model model, BindingResult result, RedirectAttributes redirect) {
 		if (result.hasErrors()) {
@@ -174,6 +192,7 @@ public class ClienteController {
 		}
 	}
 
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/regVenta")
 	public String crearVenta(Model model, RedirectAttributes redirect) {
 		if (productoServiceDAO.getProductosSelected().isEmpty()) {
@@ -186,18 +205,40 @@ public class ClienteController {
 		return "cliente/form";
 	}
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/verFac")
-	public String verFacturas(Model model, Authentication auth) {
-		if(this.hasRole("USER")) {
+	public String verFacturas(Model model, Authentication auth, HttpServletRequest request) {
+		if(this.hasRole("ROLE_USER")) {
 			logger.info("Hola " + auth.getName().concat("-Tienes acceso: USER"));
 		} else {
 			logger.info("Hola " + auth.getName().concat("-No Tienes acceso"));
 		}
-		model.addAttribute("ventas", ventaDAO.findVentasForUsuario(usuarioDato));
-		model.addAttribute("titulo", "Ver ventas");
-		return "cliente/menu";
+		
+		//segunda manera para validar el rol de un usuario logeado
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		if(securityContext.isUserInRole("ADMIN")) {
+			logger.info("Hola2 " + auth.getName().concat("-Tienes acceso: ADMIN"));
+		} else {
+			logger.info("Hola2 " + auth.getName().concat("-No Tienes acceso"));
+		}
+		
+		//tercer forma de validar el rol del usuario logeado
+		if(request.isUserInRole("ROLE_ADMIN")) {
+			logger.info("Hola3 " + auth.getName().concat("-Tienes acceso: ADMIN"));
+		} else {
+			logger.info("Hola3 " + auth.getName().concat("-No Tienes acceso"));
+		}
+		
+		if(usuarioDato.getUsuarioDatosId() > 0) {
+			model.addAttribute("ventas", ventaDAO.findVentasForUsuario(usuarioDato));
+			model.addAttribute("titulo", "Ver ventas");
+			return "cliente/menu";
+		} else {
+			return "redirect:/cliente/inicio";
+		}
 	}
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/inicio")
 	public String init(RedirectAttributes redirect, Model model, Authentication authentication) {
 		usuarioDato = usuarioDatoDAO.findForId(5);

@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 import com.practica.backEnd.app.web.model.entity.UsuarioLogin;
 
 public interface IUsuarioLoginDao extends CrudRepository<UsuarioLogin, Integer>{
-
-	@Query("select u from UsuarioLogin u where u.usuarioCorreo = :correo and u.usuarioPass = :pass")
-	UsuarioLogin login(@Param("correo") String correo, @Param("pass") String pass);
+	
+	@Query("select u from UsuarioLogin u where u.usuarioCorreo = :correo")
+	UsuarioLogin findForCorreo(@Param("correo") String correo);
 	
 }
