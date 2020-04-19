@@ -1,19 +1,17 @@
 package com.practica.backEnd.app.web.model.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -35,10 +33,9 @@ public class UsuarioLogin implements Serializable {
 	private String usuarioCorreo;
 	@Column(name = "usuario_login_pass")
 	@NotEmpty
-	@Size(min = 10, max = 45)
 	private String usuarioPass;
 	@JoinColumn(name = "usuario_datos_id", referencedColumnName = "usuariodatos_id")
-	@ManyToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private UsuarioDato usuarioDatos;
 	@OneToMany(mappedBy = "usuarioLogin")
 	private List<UsuarioHasRol> usuarioHasRol;

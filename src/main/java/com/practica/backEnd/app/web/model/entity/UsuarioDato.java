@@ -43,7 +43,7 @@ public class UsuarioDato implements Serializable{
 	private Date usuarioFecha;
 	@OneToMany(mappedBy = "usuarioId")
 	private List<UsuarioHasVenta> lista;
-
+	
 	public UsuarioDato() {
 		usuarioDatosId = 0;
 		usuarioNombre = "";

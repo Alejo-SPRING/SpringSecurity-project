@@ -2,6 +2,7 @@ package com.practica.backEnd.app.web.model.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class UsuarioHasRol implements Serializable{
 	@Column(name = "idusuario_has_roles")
 	private Integer id;
 	@JoinColumn(name = "usuario_id", referencedColumnName = "idusuario_login_id")
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private UsuarioLogin usuarioLogin;
 	@Column(name = "authority")
 	private String rol;
